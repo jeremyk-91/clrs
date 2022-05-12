@@ -8,10 +8,8 @@ import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,7 +23,8 @@ public class MaximumSubarrayTest {
     public static Collection<Object[]> parameters() {
         return Arrays.asList(new Object[][] {
                 { BRUTE_FORCE, (Function<int[], Range<Integer>>) MaximumSubarray::byBruteForce },
-                { "Divide and Conquer", (Function<int[], Range<Integer>>) MaximumSubarray::byDivideAndConquer }
+                { "Divide and Conquer", (Function<int[], Range<Integer>>) MaximumSubarray::byDivideAndConquer },
+                { "Iteration", (Function<int[], Range<Integer>>) MaximumSubarray::byIteration }
         });
     }
 

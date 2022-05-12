@@ -32,6 +32,27 @@ public final class MaximumSubarray {
         return byDivideAndConquerRecursion(array, 0, array.length - 1).indices();
     }
 
+    public static Range<Integer> byIteration(int[] array) {
+        int maximalSum = Integer.MIN_VALUE;
+        Range<Integer> maximalSubarray = Range.closed(0, 0);
+
+        int originForLocalSum = 0;
+        int sumEndingLocally = 0;
+        for (int i = 0; i < array.length; i++) {
+            if (sumEndingLocally < 0) {
+                sumEndingLocally = array[i];
+                originForLocalSum = i;
+            } else {
+                sumEndingLocally = sumEndingLocally + array[i];
+            }
+            if (sumEndingLocally > maximalSum) {
+                maximalSum = sumEndingLocally;
+                maximalSubarray = Range.closed(originForLocalSum, i);
+            }
+        }
+        return maximalSubarray;
+    }
+
     /**
      * Returns the maximum sub-array within the provided array - between the provided bounds.
      */
