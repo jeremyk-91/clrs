@@ -1,22 +1,31 @@
 package clrs.chapter4;
 
 import com.google.common.collect.Range;
+import org.junit.Assume;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Parameterized.class)
 public class MaximumSubarrayTest {
+
+    public static final String BRUTE_FORCE = "Brute Force";
+
     @Parameterized.Parameters(name = "{0}")
     public static Collection<Object[]> parameters() {
         return Arrays.asList(new Object[][] {
-                { "Brute Force", (Function<int[], Range<Integer>>) MaximumSubarray::byBruteForce}
+                { BRUTE_FORCE, (Function<int[], Range<Integer>>) MaximumSubarray::byBruteForce },
+                { "Divide and Conquer", (Function<int[], Range<Integer>>) MaximumSubarray::byDivideAndConquer }
         });
     }
 
@@ -54,5 +63,16 @@ public class MaximumSubarrayTest {
     public void largerBookExample() {
         int[] values = {13, -3, -25, 20, -3, -16, -23, 18, 20, -7, 12, -5, -22, 15, -4, 7};
         assertThat(evaluator.apply(values)).isEqualTo(Range.closed(7, 10));
+    }
+
+    @Test
+    public void fuzzTest() {
+        Assume.assumeFalse(name.equals(BRUTE_FORCE));
+        int[] testData = IntStream.range(0, 1000)
+                .map(_unused -> ThreadLocalRandom.current().nextInt(-100, 100))
+                .toArray();
+        assertThat(evaluator.apply(testData))
+                .as("matches brute force algorithm, which is known to be robust")
+                .isEqualTo(MaximumSubarray.byBruteForce(testData));
     }
 }
